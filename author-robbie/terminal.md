@@ -7,6 +7,11 @@ tldr command
 ```
 
 ```bash
+code .
+# opens vscode at this directory
+```
+
+```bash
 pwd
 # prints working directory
 ```
