@@ -151,7 +151,188 @@ h2 {
 }
 ```
 
+You can refer to the partial with:
+
+```scss
+@include margins.$margin-sm;
+```
+
 - Always name your partials with an \_ at the beginning, so it isn't compiled if you were compiling a whole directory
   - The code within the partials will be compiled in the regular SCSS files they are imported into
 - Make sure to import your partials at the top of your file
 - Use @use to import partials (using @import is deprecated)
+
+## SCSS Mixins
+
+- Very similar to Javascript functions
+- Mixins allows us to define some styling once and reuse that styling on multiple elements
+- This is helpful for preventing code duplication
+
+```scss
+.projects {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.articles {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+```
+
+This turns into:
+
+```scss
+@mixin flex-center {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.projects {
+	@include flex-center;
+}
+
+.articles {
+	@include flex-center;
+}
+```
+
+### Parameters
+
+Mixins can also take parameters, just like a function:
+
+```scss
+@mixin bg-height($bg-color, $height) {
+	background-color: $bg-color;
+	height: $height;
+}
+
+.projects {
+	@include bg-height(beige, 300px);
+	// background-color: beige;
+	// height: 300px;
+}
+```
+
+You can provide default values to save you re-entering similar information into parameters
+
+```scss
+@mixin bg-height($bg-color: aqua, $height: 100px) {
+	background-color: $bg-color;
+	height: $height;
+}
+```
+
+- You may run into errors if you don't provide all of the parameters that the mixin is looking for
+
+- You can also use mixins to nest modifiers, for example:
+
+```scss
+// mixin declared
+@mixin font-size-mod($sm: 12px, $md: 18px, $lg: 24px) {
+	&--sm {
+		font-size: $sm;
+	}
+	&--md {
+		font-size: $md;
+	}
+	&--lg {
+		font-size: $lg;
+	}
+}
+
+// mixin used
+.btn {
+	background-color: purple;
+	border: 2px solid black;
+
+	@include font-size-mod(10px, 24px, 40px);
+}
+```
+
+- The above code could be useful for modifying the text not just in a paragraph, but on a button, for example.
+
+### Using media queries and @content
+
+- @content is used as a placeholder for styles that are declared where the mixin is used
+
+```scss
+// mixin declared
+@mixin small-screen {
+	@media screen and (min-width: 800px;) {
+		@content;
+	}
+}
+
+// mixin used
+@include small-screen {
+	// the container's width rule(s) are the @content
+	.container {
+		width: 600px;
+	}
+}
+```
+
+This turns into:
+
+```css
+@media screen and (min-width: 800px;) {
+	.container {
+		width: 600px;
+	}
+}
+```
+
+- You can move your mixins to a separate partial if you want, and then @use them back into the stylesheet where you need them
+
+## SCSS @extend
+
+- You can "extend" the styles of one element to another element
+- This is different to mixins because you don't need to define a mixin
+
+```scss
+.projects {
+	background-color: blue;
+	height: 300px;
+	padding: 15px;
+}
+
+.articles {
+	@extend .projects;
+}
+```
+
+This gets compiled into CSS looking like this:
+
+```css
+.projects,
+.articles {
+	background-color: blue;
+	height: 300px;
+	padding: 15px;
+}
+```
+
+- So, code from mixins is <ins>repeated/duplicated</ins> in CSS, but code from using @extend gets <ins>grouped together</ins>
+  - Another difference is there no parameters, so @extend is a little less customisable
+- You can run into issues with overriding styles sometimes with @extend due to specificity
+- You can add more code to the selector with the @extend and then the difference is added in a separate selector:
+
+## Placeholders
+
+- A placeholder is like a single or group of variables, which can be extended:
+
+```scss
+%border-styling {
+	border: 2px solid purple;
+	border-radius: 5px;
+	box-shadow: ;
+}
+
+.projects {
+	@extend %border-styling;
+}
+```

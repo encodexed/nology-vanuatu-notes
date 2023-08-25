@@ -14,6 +14,8 @@
 - Simple language that allows us to modify the looks of our web page
 - Very important for the users to know exactly how the website works from the looks of it
 - Need to strike a balance between making things usable vs making things pretty
+- Remember to give some consideration to where you place your rules in the CSS
+  - An example might be to place your navbar styles up the top, and the footer styles down the bottom
 
 ## Ways to use CSS
 
@@ -273,3 +275,115 @@ form {
 ```
 
 - Justify-content and align-items will behave differently when this rule is applied
+
+## CSS Grid
+
+- An alternative to flexbox that helps with certain layouts
+- Isn't as natively responsive as flexbox, but has some neat features
+
+```css
+.gallery {
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr;
+	/* creates grid with three columns of same size */
+	grid-template-columns: repeat(3, 1fr);
+	/* will achieve the same result */
+	grid-template-columns: 1fr;
+	/* an example of a more useful layout for small screens */
+}
+```
+
+## Media Queries
+
+- Media queries let you apply specific rules to when certain conditions are present
+  - This is primarily used for redesigning your site for different size screens
+
+```css
+.heading {
+	font-size: 40px;
+
+	@media screen and (max-width: 576px) {
+		font-size: 24px;
+	}
+
+	@media screen and (min-width: 577px) and (max-width: 768px) {
+		font-size: 32px;
+	}
+}
+```
+
+- You may choose to include your media queries in a separate section of the stylesheet, or more specifically where the element appears
+
+```css
+/* within the element */
+.heading {
+	font-size: 40px;
+
+	@media screen and (max-width: 576px) {
+		font-size: 24px;
+	}
+}
+
+/* separate section */
+@media screen and (max-width: 576px) {
+	.heading {
+		font-size: 24px;
+	}
+}
+```
+
+You can also use SCSS tools with your media queries:
+
+```scss
+@use "breakpoints.scss";
+
+@mixin phone {
+	@media only screen and (max-width: breakpoints.$sm);
+}
+
+@mixin tablet {
+	@media only screen and (min-width: (breakpoints.$sm + 1px)) and (max-width: breakpoints.$md);
+}
+```
+
+This code can be used like so:
+
+```scss
+.heading {
+	color: red;
+	font-size: 40px;
+
+	@include mixins.phone {
+		color: green;
+		font-size: 24px;
+	}
+
+	@include mixins.tablet {
+		color: orange;
+		font-size: 32px;
+	}
+}
+```
+
+### Breakpoints
+
+- Breakpoints are defined sizes at which your site will typically switch from one design to another design
+- They are measured in pixels and usually replicate different device screen sizes
+
+## CSS Frameworks
+
+- CSS frameworks are like a library of pre-defined classes with certain styles
+- Developers/designers may use them as a starting point for new projects before specific design specifications are decided
+- Frameworks are also useful for those who don't like to write CSS or deal with CSS files
+- Some great frameworks to use include:
+  - <a href="">Bootstrap</a>
+  - <a href="">Tailwind</a>
+  - <a href="">Piko</a>
+
+### Sample framework code
+
+```html
+<body>
+	<h1>Heading</h1>
+</body>
+```
