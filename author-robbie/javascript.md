@@ -201,7 +201,7 @@ false || false; // false
 
 ## Truthy and Falsey
 
-- A data type that's not a boolean, but contextually treated as a boolean
+- When a data type that's not a boolean is contextually treated as a boolean
 
 ```javascript
 const num = 1; // true
@@ -212,4 +212,124 @@ const zero = 0; // false
 undefined; // false
 null; // false
 NaN; // false
+```
+
+## Control-Flow / Conditional Decision-Making
+
+- Control-flow refers to making decisions based on certain conditions
+- Determines which code will run, read from top to bottom
+- Remember that as soon as javascript encounters a true condition, the code will run and then <ins>**exit the block**</ins>
+
+### Samples of code
+
+#### If:
+
+```javascript
+let bool = true;
+
+if (bool) {
+	console.log("This code runs if bool is true/truthy");
+	// Code in this block will not run if bool is false/falsey
+}
+```
+
+#### If/else:
+
+```javascript
+let age = 24;
+
+if (age >= 18) {
+	console.log("You can buy alcohol");
+} else {
+	console.log("Come back when you're 18");
+}
+```
+
+#### If/else if/else:
+
+```javascript
+let score = 98;
+
+if (score >= 90) {
+	console.log("A grade");
+} else if (score >= 80 && score < 90) {
+	console.log("B grade");
+} else if (score >= 70 && score < 80) {
+	console.log("C grade");
+} else {
+	console.log("Fail");
+}
+```
+
+#### Multiple conditions in the same check:
+
+```javascript
+let country = "Australia";
+let age = 19;
+
+if (age >= 21) {
+	console.log("You are old enough to drink anywhere");
+} else if (country !== "USA" && age >= 18) {
+	console.log("You can have a drink outside the US");
+} else {
+	console.log("You are not old enough to drink anywhere");
+}
+```
+
+#### Nested conditions:
+
+```javascript
+let location = "shops";
+let money = 5.5;
+
+if (location === "shops") {
+	if (money > 4) {
+		console.log("Buy coffee");
+	} else if (money < 0.5) {
+		console.log("Go home");
+	} else {
+		console.log("Buy something cheap");
+	}
+} else {
+	console.log("Grab some money and go shopping");
+}
+```
+
+## Ternary operator
+
+- An alternative to writing an entire if/else block
+- Dramatically reduces code length
+
+```javascript
+let x = 2;
+let y = 2;
+
+x + y === x * y ? console.log("very cool!") : console.log("not so cool...");
+// (condition) ? (if true) : (if false);
+```
+
+## Switch statement
+
+- An alternative to length if/else if/else blocks
+- Works well with one variable being checked
+- Doesn't work as well with multiple conditions being checked
+- The `break` keyword makes sure that the code doesn't run everything beneath it
+
+```javascript
+switch (fruit) {
+	case "apple":
+		console.log("Make an apple pie");
+		break;
+	case "banana":
+		console.log("Make banana bread");
+		break;
+	case "orange":
+	case "pineapple":
+	case "grapefruit":
+		// for OR (||) cases
+		console.log("Make some juice");
+		break;
+	default:
+		console.log("I don't know what to make");
+}
 ```
