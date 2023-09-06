@@ -51,6 +51,20 @@
 </form>
 ```
 
+## Working with event listeners to get form data
+
+```js
+const form = document.querySelector("form");
+form.addEventListener("submit", (e) => {
+	e.preventDefault(); // prevent default form submission
+	// FormData API for getting values from forms
+	const data = new FormData(form);
+	console.log(data.get("task"));
+	// The quick way to get one value
+	const inputValue = document.querySelector("input").value;
+});
+```
+
 ### Extra notes
 
 - The "for" attribute on the label must match the "id" attribute of the input field
