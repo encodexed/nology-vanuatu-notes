@@ -59,7 +59,9 @@ form.addEventListener("submit", (e) => {
 	e.preventDefault(); // prevent default form submission
 	// FormData API for getting values from forms
 	const data = new FormData(form);
-	console.log(data.get("task"));
+	console.log(data.get("age"));
+	// .get takes in the name field
+
 	// The quick way to get one value
 	const inputValue = document.querySelector("input").value;
 });
@@ -75,6 +77,7 @@ form.addEventListener("submit", (e) => {
   - comes down to UI design, preference, and typically how many options there are
 - The "action" attribute on forms are where our HTTP requests are sent upon submission of the form
 - The "name" attribute on inputs is very important for grabbing the information that was entered
+  - Naturally, all fields are sent as strings, even if the input type is number
   - Without it, data is lost
   - By default, data submitted can be found in the URL (queries)
 - On radio inputs, and sometimes also dropdown options, a "value" attribute may be needed to properly send a representation of the data

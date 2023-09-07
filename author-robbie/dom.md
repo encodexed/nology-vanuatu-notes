@@ -166,7 +166,9 @@ form.addEventListener("submit", (e) => {
 	e.preventDefault(); // prevent default form submission
 	// FormData API for getting values from forms
 	const data = new FormData(form);
-	console.log(data.get("task"));
+	console.log(data.get("age"));
+	// .get takes in the name field
+
 	// The quick way to get one value
 	const inputValue = document.querySelector("input").value;
 });
