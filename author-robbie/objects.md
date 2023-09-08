@@ -88,7 +88,7 @@ const me = {
 }
 
 // Declaring that object as a prototype of something:
-Object.setPrototypeOf(me, personPrototype);
+// Object.setPrototypeOf(me, personPrototype);
 
 // Now we can do this:
 console.log(me.greet());
@@ -125,6 +125,21 @@ const { city: location } = me;
 console.log(city);
 ```
 
+### Destructuring and functions
+
+- We can use destructuring in combination with functions to return multiple values
+  - Rarely used however
+
+```js
+const addAndMultiply = (a, b) => {
+	const sum = a + b;
+	const product = a * b;
+	return [sum, product];
+};
+
+const [sumResult, productResult] = addAndMultiply(4, 5);
+```
+
 ## Setting default values for objects
 
 - If you try to access an undefined property, you will get `undefined` returned, unless you specify a default
@@ -136,3 +151,89 @@ const favouriteFood = me.favouriteFood || "pizza";
 // When destructuring
 const { favouriteFood = "pizza" } = me;
 ```
+
+## Constructors
+
+- A constructor function is just a function
+- Use a capital letter on your constructors, by convention
+- Automatically returns an object
+
+```js
+function Coach(firstName, lastName, age = 18) {
+	this.firstName = firstName;
+	this.lastName = lastName;
+	this.age = age;
+	this.company = "Nology";
+}
+
+// adding shared functionality
+
+Coach.prototype.fullName = function () {
+	return this.firstName + " " + this.lastName;
+};
+
+Coach.prototype.company = "Nology"; // slightly more efficient than constructing new objects with this property
+
+const me = new Coach("Robbie", "Gollan", 33);
+```
+
+## Classes
+
+- Still basically an object
+- Can include `static` variables and methods which can be useful
+
+```js
+class Coach {
+	static allCoaches = [];
+
+	constructor(firstName, lastName, age = 18 {
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.age = age;
+		allCoaches.push(this);
+	})
+
+	fullName() {
+		return this.firstName + ' ' + this.lastName;
+	}
+}
+```
+
+## Object Iteration
+
+- There are a few ways to iterate over an objects properties
+- You can use `for-in` - `for-of` is an array iteration, it will not work on an object
+- You can also use one of the various methods attached to all objects, such as `entries`, `keys`, `values`, etc.
+
+```js
+const motorbike = {
+	wheels: 2,
+	brand: "Yamaha",
+	color: "black",
+};
+```
+
+- `entries` is really nice as it lets us subsequently perform array methods on the results
+
+```js
+console.log("Entries", Object.entries(motorbike));
+// returns an array of arrays showing key-value pairs
+```
+
+- we can destructure in function parameters
+
+```js
+const greetSomePeople = ([firstName, secondName]) => {
+	console.log(`Hello ${firstname}, ${secondName} and friends`);
+};
+```
+
+- and then mix them!
+
+```js
+const description = Object.entries(motorbike)
+	.map(([key, value]) => `${key} = ${value}`)
+	.join("\n");
+```
+
+- but this is a lot... so it takes getting used to
