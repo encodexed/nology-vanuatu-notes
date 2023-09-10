@@ -91,7 +91,9 @@ heading.classList.remove("heading");
 
 ### Text:
 
-mainHeading.textContent = 'Changed';
+```js
+mainHeading.textContent = "Changed";
+```
 
 ## Creating elements in the DOM
 
