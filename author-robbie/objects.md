@@ -237,3 +237,27 @@ const description = Object.entries(motorbike)
 ```
 
 - but this is a lot... so it takes getting used to
+
+## Objects and the `...` spread operator
+
+```js
+const me = {
+	name: "Robbie",
+	age: 33,
+};
+
+const myLocation = {
+	city: "Sydney",
+	state: "NSW",
+	country: "Australia",
+};
+```
+
+Combine the two!
+
+```js
+const fullDetails = {
+	...me,
+	...myLocation,
+};
+```
