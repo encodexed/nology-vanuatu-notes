@@ -57,6 +57,11 @@
 
 ## Getting started (with Vite)
 
+```bash
+# To start a new Vite project
+npm create vite@latest
+```
+
 - Used to use create-react-app but now we use <a href="https://vitejs.dev/guide/">Vite</a>
 
 ## Components
