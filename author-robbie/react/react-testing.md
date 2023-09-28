@@ -121,6 +121,14 @@ npm run test
 
 ## Writing our tests
 
+- Typically, you won't test anything super obvious
+  - Something more obvious you might test would be conditional rendering
+- If there is any chance for an error, it should be tested
+- You should be thinking about the fragility of your tests when you decide to go about writing them: <a href="https://kentcdodds.com/blog/making-your-ui-tests-resilient-to-change">Check this post out</a>
+  - Are we checking errors against the messages they return? What if we change the wording of that? Maybe we should check something different
+- **Test Driven Development**: we write our test first, and then write the bare minimum code to fix it, then we write our next code
+  - This can _test_ drive you crazy
+
 <a href="https://testing-library.com/docs/">Documentation</a>
 
 Here is some code for testing a card component:
@@ -201,6 +209,155 @@ describe("Card Component", () => {
 		expect(btn).toHaveTextContent(/show/i);
 		await user.click(btn);
 		expect(btn).toHaveTextContent(/hide/i);
+	});
+});
+```
+
+## Mocking functions
+
+- Mock functions are also known as "spies", because they let you spy on the behavior of a function that is called indirectly by some other code, rather than only testing the output
+- Here is an example of using `mock`:
+
+```jsx
+describe("SearchBar", () => {
+	it("should call the submit function that is passed in when submit is clicked", async () => {
+		// create a mock function
+		const myMock = vi.fn(() => console.log("Search happens"));
+		render(<SearchBar formSubmit={myMock} />);
+		const searchBtn = screen.getByRole("button");
+		const user = userEvent.setup();
+		await user.click(searchBtn);
+		expect(myMock).toHaveBeenCalled();
+	});
+
+	it("should call the submit function with the value typed into the search bar", async () => {
+		const myMock = vi.fn((value) => console.log("Searched for: " + value));
+		render(<SearchBar formSubmit={myMock} />);
+		const searchBtn = screen.getByRole("button");
+		const input = screen.getByPlaceholderText(/search/i);
+		const user = userEvent.setup();
+		await user.type(input, "hello");
+		await user.click(searchBtn);
+		expect(myMock).toHaveBeenCalledOnce();
+		expect(myMock.mock.calls[0][0]).toBe("hello");
+	});
+
+	it("should clear the search bar after form is submitted", async () => {
+		const myMock = vi.fn((value) => console.log("Searched for: " + value));
+		render(<SearchBar formSubmit={myMock} />);
+		const searchBtn = screen.getByRole("button");
+		const input = screen.getByPlaceholderText(/search/i);
+		const user = userEvent.setup();
+		await user.type(input, "hello");
+		expect(input).toHaveValue("hello");
+		await user.click(searchBtn);
+		expect(input).toHaveValue("");
+	});
+
+	it("should call the submit function with the right value, multiple times", async () => {
+		const myMock = vi.fn((value) => console.log("Searched for: " + value));
+		render(<SearchBar formSubmit={myMock} />);
+		const searchBtn = screen.getByRole("button");
+		const input = screen.getByPlaceholderText(/search/i);
+		const user = userEvent.setup();
+		await user.type(input, "hello");
+		await user.click(searchBtn);
+		await user.type(input, "goodbye");
+		await user.click(searchBtn);
+		expect(myMock).toHaveBeenCalledTimes(2);
+		console.log(myMock.mock.calls);
+		expect(myMock.mock.calls[0][0]).toBe("hello");
+		expect(myMock.mock.calls[1][0]).toBe("goodbye");
+	});
+});
+```
+
+## `spyOn`
+
+- You cannot spy on a function directly with this
+  - You would want to unit test the function being called rather, if you wanted to test that
+  - You use the arguments: `(object, methodName)`
+- You can get this syntax with some import magic
+
+```jsx
+import * as jokeServices from "../../services/joke-services";
+// This is an object with methods on it
+```
+
+- Here is more test code samples:
+
+```jsx
+import { render, screen, waitFor } from "@testing-library/react";
+import { SearchContext } from "../../context/SearchContextProvider";
+import JokeLoader from "./JokeLoader";
+import { describe, expect, vi } from "vitest";
+import * as jokeServices from "../../services/joke-services";
+
+describe("JokeLoader", () => {
+	it("should display loading text based on context search value", () => {
+		render(
+			<SearchContext.Provider value={{ searchValue: "apple" }}>
+				<JokeLoader />
+			</SearchContext.Provider>
+		);
+
+		const loadingText = screen.getByText("Searching for jokes about apple");
+		expect(loadingText).toBeInTheDocument();
+	});
+
+	it("Should call the getJokesBySearchFunction with the value provided by context", async () => {
+		const mockedJokeFetch = vi.spyOn(jokeServices, "getJokesBySearch");
+		render(
+			<SearchContext.Provider value={{ searchValue: "apple" }}>
+				<JokeLoader />
+			</SearchContext.Provider>
+		);
+
+		await waitFor(() => {
+			expect(mockedJokeFetch.mock.calls[0][0]).toBe("apple");
+		});
+	});
+
+	it("should render a JokeList if getJokesBySearch returns jokes for a search value", async () => {
+		const mockedJokeFetch = vi.spyOn(jokeServices, "getJokesBySearch");
+		mockedJokeFetch.mockResolvedValue([{ id: 1, joke: "Apples are funny" }]);
+		render(
+			<SearchContext.Provider value={{ searchValue: "apple" }}>
+				<JokeLoader />
+			</SearchContext.Provider>
+		);
+
+		const loadingText = screen.getByText("Searching for jokes about apple");
+		expect(loadingText).toBeInTheDocument();
+
+		await waitFor(() => {
+			// check that my loading text goes away
+			expect(loadingText).not.toBeInTheDocument();
+			const jokesHeading = screen.getByTitle("joke-heading");
+			screen.debug();
+			expect(jokesHeading).toBeInTheDocument();
+			const joke = screen.getByText("Apples are funny");
+			expect(joke).toBeInTheDocument();
+		});
+	});
+
+	it("should render an error message if getJokesBySearch resolves to an error", async () => {
+		const mockedJokeFetch = vi.spyOn(jokeServices, "getJokesBySearch");
+		mockedJokeFetch.mockRejectedValue(
+			new Error("Oh no my fetch returned an error")
+		);
+		render(
+			<SearchContext.Provider value={{ searchValue: "apple" }}>
+				<JokeLoader />
+			</SearchContext.Provider>
+		);
+
+		await waitFor(() => {
+			const errorPara = screen.getByText("Oh no my fetch returned an error");
+
+			screen.debug();
+			expect(errorPara).toBeInTheDocument();
+		});
 	});
 });
 ```
