@@ -28,6 +28,7 @@
 - Popular choice to use with React
 - Well suited towards live data, provides a very easy subscription API
   - Allows real time updates, good for things like chat apps
+- **_Firestore has access to subcollections/reference data types, like probably other NoSQL databases_**
 
 ## Setting up a Firestore
 

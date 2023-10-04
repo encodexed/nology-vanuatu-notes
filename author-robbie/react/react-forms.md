@@ -25,11 +25,24 @@
 - Complex state management
 - Might need to use Effects
 
-## DOM Refs
+## DOM Refs and `useRef`
 
-- A ref is a reference to something which persists across state changes
+- A ref is a reference to some mutable object which persists across state changes and re-renders
   - A DOM ref is when we bypass the virtual DOM and reference the DOM directly
-- We'll need to use the `useRef` hook
+- It will lose any value it has if it unmounts from the DOM
+- When we start using a ref, we set it to null, but we then attach it to an element
+
+```jsx
+import { useRef } from 'react';
+// ...
+const inputRef = useRef(null);
+// ...
+<input type="text" placeholder="type something" ref={inputRef}>
+```
+
+- We can access the DOM element by using `inputRef.current`
+- We can go further though, with input for example, by accessing the `.current.value` to retrieve the value attribute of that DOM element
+- Refs are also good for referencing DOM elements that cannot be accessed through the virtual DOM, such as HTML canvas (has a special API)
 
 ### Pros
 
