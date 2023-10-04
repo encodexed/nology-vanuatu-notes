@@ -82,10 +82,15 @@ byte tooBig = (byte) 130; // This will lead to some bugs in your code
 - When doing arithmetic, `int` will be used as the default value unless we're working with `long`
 - The largest fractional numeric data type involved will be used when working with them
 
-## Other data types
+## Strings
+
+- In java, a
 
 ```java
 String name = "Robbie"; // You must use double quotes for strings
+int people = 10;
+String time = "2pm";
+String.format("%s is meeting %i people at %s", name, people, time);
 ```
 
 ## Grabbing input from users in the console

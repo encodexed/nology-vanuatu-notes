@@ -111,3 +111,61 @@ public void setAge(int age) {
   }
 }
 ```
+
+## Other methods
+
+- You can make up your own methods for each class that each instance of that class will have access to:
+
+```java
+// Cannot be called from Main
+private String getFullName() {
+  return (this.firstName + " " + this.lastName);
+}
+
+// Can be called from Main
+public void printFullName() {
+  System.out.println(this.getFullName());
+}
+```
+
+## Static method
+
+- You can call these methods from the class name directly
+- You do not need to make an instance of the object to be able to use a `static` method
+- Helpers and utilities classes will have a lot of these
+
+```java
+// file: Calculations.java
+public static int add(int x, int y) {
+  return x + y;
+}
+
+// file: Main.java
+int x = 2;
+int y = 7;
+int sum = Calculations.add(x, y);
+```
+
+## Method overloading
+
+- `Overloading` is when you have multiple methods with the same name, but with different parameters
+  - You could have more/less parameters, or a different type of parameters (ie. `int` or `byte`)
+- We have already seen this with constructors
+
+```java
+// file: Calculations.java
+public static int add(int x, int y) {
+  return x + y;
+}
+
+public static int add(int x, int y, int z) {
+  return x + y + z;
+}
+
+// file: Main.java
+int x = 2;
+int y = 7;
+int z = 4;
+int sum2= Calculations.add(x, y); // returns 9
+int sum3 = Calculations.add(x, y, z); // returns 13
+```
