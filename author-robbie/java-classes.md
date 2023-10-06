@@ -76,8 +76,9 @@ public class Student {
 - You will typically make your properties `private` and your getter and setter methods `public`
 - In Eclipse, you can auto-generate getters and setters by right-clicking in the code, then selecting Source
 - Having setter methods gives us greater control/error handling over our operations
+- _Pro-tip: You can call your setter methods in your constructor_
 
-### Getter method:
+### Getter method
 
 ```java
 
@@ -94,7 +95,7 @@ public boolean isEmployed() {
 }
 ```
 
-### Setter method:
+### Setter method
 
 ```java
 // Returns void/nothing, updates the value of firstName;

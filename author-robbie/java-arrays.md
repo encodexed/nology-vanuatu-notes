@@ -65,6 +65,4 @@ System.out.println(stringList); // will print out the array list as a string
 ArrayList<int> noInts = new ArrayList<int>(); // will not work
 ArrayList<Integer> ints = new ArrayList<Integer>(); // wrapper class will treat your primitive types as objects
 ints.add(3); // this works now
-
-
 ```
